@@ -1,3 +1,4 @@
+from statistics import mode
 from django.db import models
 
 class Pokemon(models.Model):
@@ -9,3 +10,8 @@ class Pokemon(models.Model):
 
     def __str__(self):
         return self.title
+
+
+class PokemonEntity(models.Model):
+    latitude = models.FloatField()
+    longitude = models.FloatField()
