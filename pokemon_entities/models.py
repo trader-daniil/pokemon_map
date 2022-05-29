@@ -18,8 +18,8 @@ class PokemonEntity(models.Model):
         on_delete=models.CASCADE,
         related_name='pokemon_location'
     )
-    latitude = models.FloatField()
-    longitude = models.FloatField()
+    lat = models.FloatField()
+    lon = models.FloatField()
     appeared_at = models.DateTimeField()
     disappeared_at = models.DateTimeField()
     level = models.IntegerField(
