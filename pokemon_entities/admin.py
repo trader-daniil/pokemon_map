@@ -5,9 +5,17 @@ from django.contrib import admin
 
 @admin.register(Pokemon)
 class AdminPokemon(admin.ModelAdmin):
-    list_display = ('id', 'title')
+    list_display = (
+        'id',
+        'title',
+    )
 
 
 @admin.register(PokemonEntity)
 class AdminEntity(admin.ModelAdmin):
-    list_display = ('latitude', 'longitude')
+    list_display = (
+        'latitude',
+        'longitude',
+        'appeared_at',
+        'disappeared_at',
+    )
