@@ -1,9 +1,13 @@
+from operator import mod
+from pyexpat import model
 from django.db import models
 from django.core.validators import MaxValueValidator, MinValueValidator
 
 
 class Pokemon(models.Model):
     title = models.CharField(max_length=200)
+    title_en = models.CharField(max_length=200)
+    title_jp = models.CharField(max_length=200)
     image = models.ImageField(
         null=True,
         blank=True,

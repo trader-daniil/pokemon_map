@@ -8,6 +8,8 @@ class AdminPokemon(admin.ModelAdmin):
     list_display = (
         'id',
         'title',
+        'title_en',
+        'title_jp',
     )
 
 
