@@ -1,3 +1,2 @@
-for n in range(10):
-    pass
-print(n)
+a = {'n': None}
+print(bool(a))

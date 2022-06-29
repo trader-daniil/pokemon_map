@@ -1,5 +1,4 @@
 from operator import mod
-from pyexpat import model
 from django.db import models
 from django.core.validators import MaxValueValidator, MinValueValidator
 
@@ -8,6 +7,12 @@ class Pokemon(models.Model):
     title = models.CharField(max_length=200)
     title_en = models.CharField(max_length=200)
     title_jp = models.CharField(max_length=200)
+    next_evolution = models.ForeignKey(
+        "self",
+        on_delete=models.DO_NOTHING,
+        null=True,
+        blank=True,
+    )
     image = models.ImageField(
         null=True,
         blank=True,
@@ -16,6 +21,10 @@ class Pokemon(models.Model):
         null=True,
         blank=True,
     )
+    def display_evolution(self):
+        if self.next_evolution:
+            return f'Эволюционирует в {self.next_evolution.title}'
+
     def __str__(self):
         return self.title
 
