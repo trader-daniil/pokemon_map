@@ -8,10 +8,16 @@ class Pokemon(models.Model):
         verbose_name='Имя покемона')
     title_en = models.CharField(
         max_length=200,
-        verbose_name='Имя покемона на английском')
+        verbose_name='Имя покемона на английском',
+        null=True,
+        blank=True,
+    )
     title_jp = models.CharField(
         max_length=200,
-        verbose_name='Имя покемона на японском')
+        verbose_name='Имя покемона на японском',
+        null=True,
+        blank=True,
+    )
     previous_evolution = models.ForeignKey(
         "self",
         related_name='next_evolutions',
@@ -58,6 +64,8 @@ class PokemonEntity(models.Model):
             MinValueValidator(1),
             MaxValueValidator(100),
         ],
+        null=True,
+        blank=True,
     )
     health = models.IntegerField(
         verbose_name='Здоровье покемона',
@@ -66,6 +74,8 @@ class PokemonEntity(models.Model):
             MinValueValidator(1),
             MaxValueValidator(100),
         ],
+        null=True,
+        blank=True,
     )
     strength = models.IntegerField(
         verbose_name='Сила покемона',
@@ -74,6 +84,8 @@ class PokemonEntity(models.Model):
             MinValueValidator(1),
             MaxValueValidator(100),
         ],
+        null=True,
+        blank=True,
     )
     defence = models.IntegerField(
         verbose_name='Броня покемона',
@@ -82,6 +94,8 @@ class PokemonEntity(models.Model):
             MinValueValidator(1),
             MaxValueValidator(100),
         ],
+        null=True,
+        blank=True,
     )
     stamina = models.IntegerField(
         verbose_name='Выносливость покемона',
@@ -90,4 +104,6 @@ class PokemonEntity(models.Model):
             MinValueValidator(1),
             MaxValueValidator(100),
         ],
+        null=True,
+        blank=True,
     )
