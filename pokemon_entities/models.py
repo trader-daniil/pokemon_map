@@ -5,17 +5,17 @@ from django.core.validators import MaxValueValidator, MinValueValidator
 class Pokemon(models.Model):
     title = models.CharField(
         max_length=200,
-        verbose_name='pokemon name')
+        verbose_name='Имя покемона')
     title_en = models.CharField(
         max_length=200,
-        verbose_name='pokemon name in english')
+        verbose_name='Имя покемона на английском')
     title_jp = models.CharField(
         max_length=200,
-        verbose_name='pokemon name in japanese')
+        verbose_name='Имя покемона на японском')
     previous_evolution = models.ForeignKey(
         "self",
         related_name='next_evolutions',
-        verbose_name='from whom pokemon evolved',
+        verbose_name='Из какого покемона эволюционировал',
         on_delete=models.SET_NULL,
         null=True,
         blank=True,
@@ -43,15 +43,16 @@ class PokemonEntity(models.Model):
         on_delete=models.CASCADE,
         related_name='pokemon_location'
     )
-    lat = models.FloatField(verbose_name='latitude of location')
-    lon = models.FloatField(verbose_name='longitude of location')
+    lat = models.FloatField(verbose_name='Широта в местоположении')
+    lon = models.FloatField(verbose_name='Долгота в местоположении')
     appeared_at = models.DateTimeField(
-        verbose_name='when pokemon emerge on map',
+        verbose_name='Когда покемон появится на карте',
     )
     disappeared_at = models.DateTimeField(
-        verbose_name='when pokemon disappeared from map',
+        verbose_name='Когда покемон исчезнет с карты',
     )
     level = models.IntegerField(
+        verbose_name='Уровень покемона',
         default=1,
         validators=[
             MinValueValidator(1),
@@ -59,6 +60,7 @@ class PokemonEntity(models.Model):
         ],
     )
     health = models.IntegerField(
+        verbose_name='Здоровье покемона',
         default=1,
         validators=[
             MinValueValidator(1),
@@ -66,6 +68,7 @@ class PokemonEntity(models.Model):
         ],
     )
     strength = models.IntegerField(
+        verbose_name='Сила покемона',
         default=1,
         validators=[
             MinValueValidator(1),
@@ -73,6 +76,7 @@ class PokemonEntity(models.Model):
         ],
     )
     defence = models.IntegerField(
+        verbose_name='Броня покемона',
         default=1,
         validators=[
             MinValueValidator(1),
@@ -80,6 +84,7 @@ class PokemonEntity(models.Model):
         ],
     )
     stamina = models.IntegerField(
+        verbose_name='Выносливость покемона',
         default=1,
         validators=[
             MinValueValidator(1),
