@@ -7,9 +7,10 @@ class Pokemon(models.Model):
     title = models.CharField(max_length=200)
     title_en = models.CharField(max_length=200)
     title_jp = models.CharField(max_length=200)
-    next_evolution = models.ForeignKey(
+    previous_evolution = models.ForeignKey(
         "self",
-        on_delete=models.DO_NOTHING,
+        related_name='next_evolutions',
+        on_delete=models.SET_NULL,
         null=True,
         blank=True,
     )
@@ -22,8 +23,8 @@ class Pokemon(models.Model):
         blank=True,
     )
     def display_evolution(self):
-        if self.next_evolution:
-            return f'Эволюционирует в {self.next_evolution.title}'
+        if self.previous_evolution:
+            return f'Эволюционировал из {self.previous_evolution.title}'
 
     def __str__(self):
         return self.title

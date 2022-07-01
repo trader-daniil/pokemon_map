@@ -92,12 +92,20 @@ def show_pokemon(request, pokemon_id):
             lon=pokemon_entity.lon,
             image_url=requested_pokemon.image.path,
         )
+    pokemon_previous_evolution = {}
     pokemon_next_evolution = {}
-    if requested_pokemon.next_evolution:
-        pokemon_evolutioned = requested_pokemon.next_evolution
+    if requested_pokemon.next_evolutions.first():
+        pokemon_evolutioned = requested_pokemon.next_evolutions.first()
         pokemon_next_evolution['title_ru'] = pokemon_evolutioned.title
         pokemon_next_evolution['pokemon_id'] = pokemon_evolutioned.id
         pokemon_next_evolution['img_url'] = pokemon_evolutioned.image.url
+    if requested_pokemon.previous_evolution:
+        evolutioned_from_pokemon = requested_pokemon.previous_evolution
+        pokemon_previous_evolution['title_ru'] = evolutioned_from_pokemon.title
+        pokemon_previous_evolution['pokemon_id'] = evolutioned_from_pokemon.id
+        pokemon_previous_evolution['img_url'] = evolutioned_from_pokemon.image.url
+
+
     pokemon_info = {
         'title_ru': requested_pokemon.title,
         'title_en': requested_pokemon.title_en,
@@ -105,6 +113,7 @@ def show_pokemon(request, pokemon_id):
         'img_url': requested_pokemon.image.url,
         'description': requested_pokemon.description,
         'next_evolution': pokemon_next_evolution,
+        'previous_evolution': pokemon_previous_evolution,
     }
     return render(
         request,
