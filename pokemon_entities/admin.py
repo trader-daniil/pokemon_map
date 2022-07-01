@@ -1,4 +1,3 @@
-from dataclasses import field
 from .models import Pokemon, PokemonEntity
 from django.contrib import admin
 

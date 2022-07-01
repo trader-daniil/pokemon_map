@@ -1,15 +1,21 @@
-from operator import mod
 from django.db import models
 from django.core.validators import MaxValueValidator, MinValueValidator
 
 
 class Pokemon(models.Model):
-    title = models.CharField(max_length=200)
-    title_en = models.CharField(max_length=200)
-    title_jp = models.CharField(max_length=200)
+    title = models.CharField(
+        max_length=200,
+        verbose_name='pokemon name')
+    title_en = models.CharField(
+        max_length=200,
+        verbose_name='pokemon name in english')
+    title_jp = models.CharField(
+        max_length=200,
+        verbose_name='pokemon name in japanese')
     previous_evolution = models.ForeignKey(
         "self",
         related_name='next_evolutions',
+        verbose_name='from whom pokemon evolved',
         on_delete=models.SET_NULL,
         null=True,
         blank=True,
@@ -22,6 +28,7 @@ class Pokemon(models.Model):
         null=True,
         blank=True,
     )
+
     def display_evolution(self):
         if self.previous_evolution:
             return f'Эволюционировал из {self.previous_evolution.title}'
@@ -36,10 +43,14 @@ class PokemonEntity(models.Model):
         on_delete=models.CASCADE,
         related_name='pokemon_location'
     )
-    lat = models.FloatField()
-    lon = models.FloatField()
-    appeared_at = models.DateTimeField()
-    disappeared_at = models.DateTimeField()
+    lat = models.FloatField(verbose_name='latitude of location')
+    lon = models.FloatField(verbose_name='longitude of location')
+    appeared_at = models.DateTimeField(
+        verbose_name='when pokemon emerge on map',
+    )
+    disappeared_at = models.DateTimeField(
+        verbose_name='when pokemon disappeared from map',
+    )
     level = models.IntegerField(
         default=1,
         validators=[

@@ -1,6 +1,4 @@
-import re
 import folium
-import json
 
 from django.http import HttpResponseNotFound
 from django.shortcuts import render
@@ -42,7 +40,7 @@ def show_all_pokemons(request):
             pokemon=pokemon,
             appeared_at__lte=current_datetime,
             disappeared_at__gte=current_datetime,
-        ) 
+        )
         for pokemon_entity in pokemons_on_map:
             add_pokemon(
                 folium_map=folium_map,
@@ -52,7 +50,7 @@ def show_all_pokemons(request):
             )
     pokemons_on_page = []
     for pokemon in pokemons_in_db:
-        try:       
+        try:
             pokemon_image_path = pokemon.image.url
         except ValueError:
             pokemon_image_path = None
@@ -84,7 +82,7 @@ def show_pokemon(request, pokemon_id):
             pokemon=requested_pokemon,
             appeared_at__lte=current_datetime,
             disappeared_at__gte=current_datetime,
-        ) 
+        )
     for pokemon_entity in pokemons_on_map:
         add_pokemon(
             folium_map=folium_map,
@@ -103,8 +101,8 @@ def show_pokemon(request, pokemon_id):
         evolutioned_from_pokemon = requested_pokemon.previous_evolution
         pokemon_previous_evolution['title_ru'] = evolutioned_from_pokemon.title
         pokemon_previous_evolution['pokemon_id'] = evolutioned_from_pokemon.id
-        pokemon_previous_evolution['img_url'] = evolutioned_from_pokemon.image.url
-
+        pokemon_image_url = evolutioned_from_pokemon.image.url
+        pokemon_previous_evolution['img_url'] = pokemon_image_url
 
     pokemon_info = {
         'title_ru': requested_pokemon.title,
