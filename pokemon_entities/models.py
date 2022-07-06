@@ -26,7 +26,7 @@ class Pokemon(models.Model):
         null=True,
         blank=True,
     )
-    image = models.ImageField(default='default_pokemon_emage.png')
+    image = models.ImageField()#default='default_pokemon_emage.png')
     description = models.TextField(blank=True)
     element_type = models.ManyToManyField(
         'PokemonElementType',
