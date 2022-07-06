@@ -11,13 +11,11 @@ class Pokemon(models.Model):
     title_en = models.CharField(
         max_length=200,
         verbose_name='Имя покемона на английском',
-        null=True,
         blank=True,
     )
     title_jp = models.CharField(
         max_length=200,
         verbose_name='Имя покемона на японском',
-        null=True,
         blank=True,
     )
     previous_evolution = models.ForeignKey(
@@ -28,13 +26,8 @@ class Pokemon(models.Model):
         null=True,
         blank=True,
     )
-    image = models.ImageField(
-        default='default_pokemon_emage.png'
-    )
-    description = models.TextField(
-        null=True,
-        blank=True,
-    )
+    image = models.ImageField(default='default_pokemon_emage.png')
+    description = models.TextField(blank=True)
     element_type = models.ManyToManyField(
         'PokemonElementType',
         related_name='pokemons',
