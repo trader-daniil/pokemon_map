@@ -1,5 +1,7 @@
+from xml.dom.minidom import Element
 from django.db import models
 from django.core.validators import MaxValueValidator, MinValueValidator
+from django.urls import reverse
 
 
 class Pokemon(models.Model):
@@ -27,12 +29,15 @@ class Pokemon(models.Model):
         blank=True,
     )
     image = models.ImageField(
-        null=True,
-        blank=True,
+        default='default_pokemon_emage.png'
     )
     description = models.TextField(
         null=True,
         blank=True,
+    )
+    element_type = models.ManyToManyField(
+        'PokemonElementType',
+        related_name='pokemons',
     )
 
     def display_evolution(self):
@@ -41,6 +46,11 @@ class Pokemon(models.Model):
 
     def __str__(self):
         return self.title
+
+    def get_absolute_url(self):
+        return reverse('pokemon', args=[str(self.id)])
+
+
 
 
 class PokemonEntity(models.Model):
@@ -107,4 +117,26 @@ class PokemonEntity(models.Model):
         ],
         null=True,
         blank=True,
-    ) 
+    )
+
+
+class PokemonElementType(models.Model):
+    WT = 'WATER'
+    FR = 'FIRE'
+    GR = 'GRASS'
+    EL = 'ELECTRO'
+    MG = 'MAGICAL'
+    ICE = 'ICE'
+    ELEMET_CHOICES = (
+        (WT, 'Water'),
+        (FR, 'Fire'),
+        (GR, 'Grass'),
+        (EL, 'Electro'),
+        (MG, 'Magical'),
+        (ICE, 'Ice'),
+    )
+    title = models.CharField(
+        max_length=20,
+        choices=ELEMET_CHOICES,
+        unique=True,
+    )

@@ -1,4 +1,4 @@
-from .models import Pokemon, PokemonEntity
+from .models import Pokemon, PokemonEntity, PokemonElementType
 from django.contrib import admin
 
 
@@ -21,3 +21,11 @@ class AdminEntity(admin.ModelAdmin):
         'appeared_at',
         'disappeared_at',
     )
+
+@admin.register(PokemonElementType)
+class AdminElement(admin.ModelAdmin):
+    list_display = (
+        'id',
+        'title',
+    )
+    
