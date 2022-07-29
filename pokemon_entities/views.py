@@ -3,7 +3,6 @@ import folium
 from django.http import HttpResponseNotFound
 from django.shortcuts import render
 from django.utils.timezone import localtime
-from django.db.models import Prefetch
 
 from pokemon_entities.models import Pokemon, PokemonEntity
 
@@ -88,22 +87,24 @@ def show_pokemon(request, pokemon_id):
             lon=pokemon_entity.lon,
             image_url=requested_pokemon.image.path,
         )
-    
+
     pokemon_previous_evolution = {}
     pokemon_next_evolution = {}
     if requested_pokemon.next_evolutions.first():
         pokemon_evolutioned = requested_pokemon.next_evolutions.first()
-        pokemon_next_evolution['title_ru'] = pokemon_evolutioned.title
-        pokemon_next_evolution['pokemon_id'] = pokemon_evolutioned.id
-        pokemon_next_evolution['img_url'] = pokemon_evolutioned.image.url
+        pokemon_next_evolution = {
+            'title_ru': pokemon_evolutioned.title,
+            'pokemon_id': pokemon_evolutioned.id,
+            'img_url': pokemon_evolutioned.image.url,
+        }
     if requested_pokemon.previous_evolution:
         evolutioned_from_pokemon = requested_pokemon.previous_evolution
-        pokemon_previous_evolution['title_ru'] = evolutioned_from_pokemon.title
-        pokemon_previous_evolution['pokemon_id'] = evolutioned_from_pokemon.id
-        pokemon_image_url = evolutioned_from_pokemon.image.url
-        pokemon_previous_evolution['img_url'] = pokemon_image_url
-
-    pokemon_info = {
+        pokemon_previous_evolution = {
+            'title_ru': evolutioned_from_pokemon.title,
+            'pokemon_id': evolutioned_from_pokemon.id,
+            'img_url': evolutioned_from_pokemon.image.url,
+        }
+    serialized_pokemon = {
         'title_ru': requested_pokemon.title,
         'title_en': requested_pokemon.title_en,
         'title_jp': requested_pokemon.title_jp,
@@ -117,6 +118,6 @@ def show_pokemon(request, pokemon_id):
         'pokemon.html',
         context={
             'map': folium_map._repr_html_(),
-            'pokemon': pokemon_info,
+            'pokemon': serialized_pokemon,
         },
     )

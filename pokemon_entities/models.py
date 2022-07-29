@@ -96,6 +96,7 @@ class PokemonEntity(models.Model):
         blank=True,
     )
 
+
 class PokemonElementType(models.Model):
     WT = 'WATER'
     FR = 'FIRE'
