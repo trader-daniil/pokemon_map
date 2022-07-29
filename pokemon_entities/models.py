@@ -1,4 +1,3 @@
-from xml.dom.minidom import Element
 from django.db import models
 from django.core.validators import MaxValueValidator, MinValueValidator
 from django.urls import reverse
@@ -26,11 +25,15 @@ class Pokemon(models.Model):
         null=True,
         blank=True,
     )
-    image = models.ImageField()#default='default_pokemon_emage.png')
-    description = models.TextField(blank=True)
+    image = models.ImageField(verbose_name='Изображение покемона')
+    description = models.TextField(
+        blank=True,
+        verbose_name='Описание покемона',
+    )
     element_type = models.ManyToManyField(
         'PokemonElementType',
         related_name='pokemons',
+        verbose_name='Стихии покемона',
     )
 
     def display_evolution(self):
@@ -44,13 +47,11 @@ class Pokemon(models.Model):
         return reverse('pokemon', args=[str(self.id)])
 
 
-
-
 class PokemonEntity(models.Model):
     pokemon = models.ForeignKey(
         Pokemon,
         on_delete=models.CASCADE,
-        related_name='pokemon_location',
+        related_name='locations',
         verbose_name='покемон',
     )
     lat = models.FloatField(verbose_name='Широта в местоположении')
@@ -63,7 +64,6 @@ class PokemonEntity(models.Model):
     )
     level = models.IntegerField(
         verbose_name='Уровень покемона',
-        default=1,
         validators=[
             MinValueValidator(1),
             MaxValueValidator(100),
@@ -73,45 +73,28 @@ class PokemonEntity(models.Model):
     )
     health = models.IntegerField(
         verbose_name='Здоровье покемона',
-        default=1,
-        validators=[
-            MinValueValidator(1),
-            MaxValueValidator(100),
-        ],
+        validators=[MinValueValidator(0)],
         null=True,
         blank=True,
     )
     strength = models.IntegerField(
         verbose_name='Сила покемона',
-        default=1,
-        validators=[
-            MinValueValidator(1),
-            MaxValueValidator(100),
-        ],
+        validators=[MinValueValidator(0)],
         null=True,
         blank=True,
     )
     defence = models.IntegerField(
         verbose_name='Броня покемона',
-        default=1,
-        validators=[
-            MinValueValidator(1),
-            MaxValueValidator(100),
-        ],
+        validators=[MinValueValidator(0)],
         null=True,
         blank=True,
     )
     stamina = models.IntegerField(
         verbose_name='Выносливость покемона',
-        default=1,
-        validators=[
-            MinValueValidator(1),
-            MaxValueValidator(100),
-        ],
+        validators=[MinValueValidator(0)],
         null=True,
         blank=True,
     )
-
 
 class PokemonElementType(models.Model):
     WT = 'WATER'
@@ -132,4 +115,5 @@ class PokemonElementType(models.Model):
         max_length=20,
         choices=ELEMET_CHOICES,
         unique=True,
+        verbose_name='Название стихии',
     )

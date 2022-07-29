@@ -3,6 +3,7 @@ import folium
 from django.http import HttpResponseNotFound
 from django.shortcuts import render
 from django.utils.timezone import localtime
+from django.db.models import Prefetch
 
 from pokemon_entities.models import Pokemon, PokemonEntity
 
@@ -30,26 +31,24 @@ def add_pokemon(folium_map, lat, lon, image_url=DEFAULT_IMAGE_URL):
 
 def show_all_pokemons(request):
     current_datetime = localtime()
-    pokemons_in_db = Pokemon.objects.all()
+    pokemons = Pokemon.objects.all()
     folium_map = folium.Map(
         location=MOSCOW_CENTER,
         zoom_start=12,
     )
-    for pokemon in pokemons_in_db:
-        pokemons_on_map = PokemonEntity.objects.filter(
-            pokemon=pokemon,
-            appeared_at__lte=current_datetime,
-            disappeared_at__gte=current_datetime,
+    pokemons_on_map = PokemonEntity.objects.select_related('pokemon').filter(
+        appeared_at__lte=current_datetime,
+        disappeared_at__gte=current_datetime,
+    )
+    for pokemon_entity in pokemons_on_map:
+        add_pokemon(
+            folium_map=folium_map,
+            lat=pokemon_entity.lat,
+            lon=pokemon_entity.lon,
+            image_url=pokemon_entity.pokemon.image.path,
         )
-        for pokemon_entity in pokemons_on_map:
-            add_pokemon(
-                folium_map=folium_map,
-                lat=pokemon_entity.lat,
-                lon=pokemon_entity.lon,
-                image_url=pokemon.image.path,
-            )
     pokemons_on_page = []
-    for pokemon in pokemons_in_db:
+    for pokemon in pokemons:
         try:
             pokemon_image_path = pokemon.image.url
         except ValueError:
@@ -78,11 +77,10 @@ def show_pokemon(request, pokemon_id):
         zoom_start=12,
     )
     current_datetime = localtime()
-    pokemons_on_map = PokemonEntity.objects.filter(
-            pokemon=requested_pokemon,
-            appeared_at__lte=current_datetime,
-            disappeared_at__gte=current_datetime,
-        )
+    pokemons_on_map = requested_pokemon.locations.filter(
+        appeared_at__lte=current_datetime,
+        disappeared_at__gte=current_datetime,
+    )
     for pokemon_entity in pokemons_on_map:
         add_pokemon(
             folium_map=folium_map,
@@ -90,6 +88,7 @@ def show_pokemon(request, pokemon_id):
             lon=pokemon_entity.lon,
             image_url=requested_pokemon.image.path,
         )
+    
     pokemon_previous_evolution = {}
     pokemon_next_evolution = {}
     if requested_pokemon.next_evolutions.first():

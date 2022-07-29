@@ -28,7 +28,7 @@ class TestPokemonModel(TestCase):
         pokemon_fields_values = {
             'title': 'Покемон_для_теста',
             'title_en': 'Pokemon_for_test',
-            'title_jp': None,
+            'title_jp': '',
             'description': 'Description of pokemon',
         }
         pokemon = TestPokemonModel.pokemon

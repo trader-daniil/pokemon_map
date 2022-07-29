@@ -63,7 +63,7 @@ class PokemonTestViews(TestCase):
         pokemon_info = {
             'title_ru': pokemon.title,
             'title_en': pokemon.title_en,
-            'title_jp': None,
+            'title_jp': '',
             'img_url': pokemon.image.url,
             'description': pokemon.description,
             'next_evolution': pokemon_2_data,
