@@ -76,7 +76,7 @@ def show_pokemon(request, pokemon_id):
         zoom_start=12,
     )
     current_datetime = localtime()
-    pokemons_on_map = requested_pokemon.locations.filter(
+    pokemons_on_map = requested_pokemon.entities.filter(
         appeared_at__lte=current_datetime,
         disappeared_at__gte=current_datetime,
     )
@@ -90,6 +90,9 @@ def show_pokemon(request, pokemon_id):
 
     pokemon_previous_evolution = {}
     pokemon_next_evolution = {}
+    pokemon_elemetns = []
+
+    """Добавление покемона, в которого эволюционирует"""
     if requested_pokemon.next_evolutions.first():
         pokemon_evolutioned = requested_pokemon.next_evolutions.first()
         pokemon_next_evolution = {
@@ -97,6 +100,8 @@ def show_pokemon(request, pokemon_id):
             'pokemon_id': pokemon_evolutioned.id,
             'img_url': pokemon_evolutioned.image.url,
         }
+
+    """Добавление покемона, из которого эволюционирует"""
     if requested_pokemon.previous_evolution:
         evolutioned_from_pokemon = requested_pokemon.previous_evolution
         pokemon_previous_evolution = {
@@ -104,6 +109,21 @@ def show_pokemon(request, pokemon_id):
             'pokemon_id': evolutioned_from_pokemon.id,
             'img_url': evolutioned_from_pokemon.image.url,
         }
+
+    """Добавление стихий покемона"""
+    if requested_pokemon.element_type.all():
+        requested_pokemon.clean()
+        for element in requested_pokemon.element_type.all():
+            serialized_strong_against_elements = []
+            for weaker_element in element.strong_against.all():
+                serialized_strong_against_elements.append(weaker_element.title)
+            serialized_element = {
+                'title': element.title,
+                'img': element.image.url,
+                'strong_against': serialized_strong_against_elements,
+            }
+            pokemon_elemetns.append(serialized_element)
+
     serialized_pokemon = {
         'title_ru': requested_pokemon.title,
         'title_en': requested_pokemon.title_en,
@@ -112,6 +132,7 @@ def show_pokemon(request, pokemon_id):
         'description': requested_pokemon.description,
         'next_evolution': pokemon_next_evolution,
         'previous_evolution': pokemon_previous_evolution,
+        'element_type': pokemon_elemetns,
     }
     return render(
         request,

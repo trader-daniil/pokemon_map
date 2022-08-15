@@ -36,7 +36,13 @@ class Pokemon(models.Model):
         verbose_name='Стихии покемона',
     )
 
-    def display_evolution(self):
+    def clean(self):
+        if self.element_type and self.element_type.count() > 3:
+            max_elements = list(self.element_type.all()[:3])
+            self.element_type.clear()
+            self.element_type.set(max_elements)
+
+    def display_next_evolution(self):
         if self.previous_evolution:
             return f'Эволюционировал из {self.previous_evolution.title}'
 
@@ -51,7 +57,7 @@ class PokemonEntity(models.Model):
     pokemon = models.ForeignKey(
         Pokemon,
         on_delete=models.CASCADE,
-        related_name='locations',
+        related_name='entities',
         verbose_name='покемон',
     )
     lat = models.FloatField(verbose_name='Широта в местоположении')
@@ -104,6 +110,8 @@ class PokemonElementType(models.Model):
     EL = 'ELECTRO'
     MG = 'MAGICAL'
     ICE = 'ICE'
+    TX = 'TOXIC'
+    ST = 'STONE'
     ELEMET_CHOICES = (
         (WT, 'Water'),
         (FR, 'Fire'),
@@ -111,10 +119,17 @@ class PokemonElementType(models.Model):
         (EL, 'Electro'),
         (MG, 'Magical'),
         (ICE, 'Ice'),
+        (TX, 'Toxic'),
+        (ST, 'Stone'),
     )
     title = models.CharField(
         max_length=20,
         choices=ELEMET_CHOICES,
         unique=True,
         verbose_name='Название стихии',
+    )
+    image = models.ImageField(verbose_name='Изображение стихии')
+    strong_against = models.ManyToManyField(
+        'self',
+        symmetrical=False,
     )

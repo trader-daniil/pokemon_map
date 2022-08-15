@@ -68,6 +68,7 @@ class PokemonTestViews(TestCase):
             'description': pokemon.description,
             'next_evolution': pokemon_2_data,
             'previous_evolution': {},
+            'element_type': [],
         }
         response_pokemon_page = guest_client.get(self.POKEMON_ID_URL)
         self.assertEqual(
