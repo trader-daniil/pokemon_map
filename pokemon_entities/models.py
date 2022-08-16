@@ -42,7 +42,7 @@ class Pokemon(models.Model):
             self.element_type.clear()
             self.element_type.set(max_elements)
 
-    def display_next_evolution(self):
+    def display_previous_evolution(self):
         if self.previous_evolution:
             return f'Эволюционировал из {self.previous_evolution.title}'
 
@@ -132,4 +132,5 @@ class PokemonElementType(models.Model):
     strong_against = models.ManyToManyField(
         'self',
         symmetrical=False,
+        verbose_name='Более слабые стихии',
     )

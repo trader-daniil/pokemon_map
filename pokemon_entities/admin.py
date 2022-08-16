@@ -9,7 +9,7 @@ class AdminPokemon(admin.ModelAdmin):
         'title',
         'title_en',
         'title_jp',
-        'display_next_evolution',
+        'display_previous_evolution',
     )
 
 
